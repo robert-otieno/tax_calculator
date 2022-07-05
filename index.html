@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay As You Earn (PAYE)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./assets/style.css">
+  <style type="text/tailwindcss">
+    @layer components {
+            .main {
+                @apply relative flex min-h-screen flex-col overflow-hidden md:py-6;
+            }
+            .main-content {
+                @apply shadow-xl ring-1 ring-gray-900/5 sm:rounded-lg md:rounded-xl bg-gradient-to-r bg-white dark:bg-gray-900 border border-orange-200 dark:border-orange-700 dark:bg-gray-800
+            }
+            .form-group {
+                @apply flex justify-center items-center justify-between
+            }
+            .form-group__header {
+                @apply block mb-2 text-sm font-medium font-semibold text-gray-900 dark:text-gray-300
+            }
+            .form-control {
+                @apply flex items-center mr-4
+            }
+            .form-control__input {
+                @apply w-4 h-4 text-orange-600 bg-gray-100 rounded border border-orange-600 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 appearance-none checked:bg-gradient-to-br from-pink-500 to-orange-400 outline-none dark:bg-gray-700 dark:border-orange-600 cursor-pointer
+            }
+            .form-control__label {
+                @apply uppercase ml-2 text-sm font-medium text-gray-900 dark:text-gray-300
+            }
+            .form-control__inputfield {
+              @apply rounded-none bg-orange-50 border border-orange-300 text-gray-900 focus:ring-orange-500 focus:outline-none focus:border-orange-500 block flex-1 min-w-0 w-full text-sm border-orange-300 p-2.5 dark:bg-orange-700 dark:border-orange-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500
+            }
+            .form-control__span {
+              @apply inline-flex items-center px-3 text-sm text-gray-900 bg-orange-200 border border-l-0 border-orange-300 rounded-none dark:bg-orange-600 dark:text-gray-400 dark:border-orange-600
+            }
+            .table-row {
+              @apply border-b border-gray-600 dark:bg-gray-800 dark:border-gray-700
+            }
+        }
+      </style>
+</head>
+
+<body class="dark:bg-gray-900">
+  <div class="main">
+    <div class="flex space-y-6 md:space-y-0">
+      <div class="main-content md:mx-12 md:flex md:gap-4">
+        <form class="space-y-6 p-4 sm:p-6 md:max-w-lg">
+          <div class="flex flex-col md:space-x-4 justify-center items-center">
+            <h1 class="mb-4 text-3xl font-semibolad">PAYE Calculator</h1>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Find out how much your net pay is after income
+              taxes.</p>
+          </div>
+
+          <div class="form-group">
+            <div class="form-group__header">Pay Period:
+            </div>
+            <div class="flex w-1/2">
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="pay_period" id="month" value="">
+                <label class="form-control__label" for="month">Month</label>
+              </div>
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="pay_period" id="year" value="">
+                <label class="form-control__label" for="year">Year</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="basic_salary" class="form-group__header">Basic Salary:</label>
+
+            <div class="flex w-1/2">
+              <input type="text" id="basic_salary" class="form-control__inputfield">
+              <span class="form-control__span">
+                Ksh
+              </span>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label for="basic_salary" class="form-group__header">Benefits (Bonus, Allowance)</label>
+
+            <div class="flex w-1/2">
+              <input type="text" id="basic_salary" class="form-control__inputfield">
+              <span class="form-control__span">
+                Ksh
+              </span>
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <div class="form-group__header">Deduct NSSF:</div>
+            <div class="flex w-1/2">
+
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="deduct_nssf" id="yes" value="">
+                <label class="form-control__label" for="yes">Yes</label>
+              </div>
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="deduct_nssf" id="no" value="">
+                <label class="form-control__label" for="no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-group__header">NSSF
+              Rates:</div>
+            <div class="flex flex-col w-1/2 mb-4">
+              <div class="flex items-center mb-2">
+                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_new" value="">
+                <label for="nssf_rates_new" class="form-control__label">New NSSF Rates (Tiered)</label>
+              </div>
+              <div class="flex items-center">
+                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_old" value="">
+                <label for="nssf_rates_old" class="form-control__label">Old NSSF Rates (Ksh200)</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-group__header">Deduct NHIF:</div>
+            <div class="flex w-1/2">
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-yes" value="">
+                <label class="form-control__label" for="yes">Yes</label>
+              </div>
+              <div class="form-control">
+                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-no" value="">
+                <label class="form-control__label" for="no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <button type="button"
+            class="text-white w-full uppercase tracking-wider bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-semibold rounded-0 text-sm px-5 py-2.5 text-center mr-2 mb-2">Calculate</button>
+        </form>
+
+        <div class="flex-1">
+          <div class="bg-orange-100 text-sm rounded-r-xl px-8 py-6">
+            <table class="w-full whitespace-nowrap tracking-wide text-gray-800">
+              <tbody>
+                <tr class="table-row">
+                  <th class="text-left py-2">Income Before Pension Deduction</th>
+                  <th class="text-right py-2">Ksh. 0.00</th>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Deductible NSSF Pension Contribution</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Income After Pension Deductions</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Benefits in Kind</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Taxable Income</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Tax on Taxable Income</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Personal Relief</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Tax Net Off Relief</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">PAYE</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">Chargable Income</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="table-row">
+                  <td class="text-left py-2">NHIF Contribution</td>
+                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                </tr>
+                <tr class="border-t">
+                  <th class="text-left py-2">Net Pay</th>
+                  <th class="text-right py-2">Ksh. 0.00</th>
+                </tr>
+              </tbody>
+            </table>
+            <div class="py-2 text-sm leading-7 text-gray-800">
+              <p>Pay As You Earn (PAYE) is a required tax deduction applied to every income. Uncertain of the income
+                subject
+                to PAYE? These include money for hours worked, overtime pay, salary, vacation pay, sick pay, payment in
+                lieu
+                of leave, commissions, bonuses, gratuities, or subsistence, as well as any other benefits earned while
+                working. </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="./assets/script.js"></script>
+</body>
+
+</html>
