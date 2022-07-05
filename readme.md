@@ -46,7 +46,7 @@ Lower earning limit of Ksh6,000
 
 Deliverables(Project objectives)
 ---------------------------------
-A GitHub repository.
+A GitHub repository. 💯
 A dynamic website that takes in BASIC SALARY and BENEFITS (BONUS, ALLOWANCE)
 and calculates the PAYE and Net Pay of the users based on the kenyan income tax bands
 provided.

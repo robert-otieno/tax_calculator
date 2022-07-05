@@ -40,6 +40,9 @@
             .table-row {
               @apply border-b border-gray-600 dark:bg-gray-800 dark:border-gray-700
             }
+            .btn {
+              @apply text-white w-full uppercase tracking-wider bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-semibold rounded-none text-sm px-5 py-2.5 text-center mr-2 mb-2
+            }
         }
       </style>
 </head>
@@ -60,11 +63,11 @@
             </div>
             <div class="flex w-1/2">
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="pay_period" id="month" value="">
+                <input class="form-control__input" type="radio" name="pay_period" id="month" value="month" required>
                 <label class="form-control__label" for="month">Month</label>
               </div>
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="pay_period" id="year" value="">
+                <input class="form-control__input" type="radio" name="pay_period" id="year" value="year" required>
                 <label class="form-control__label" for="year">Year</label>
               </div>
             </div>
@@ -74,7 +77,7 @@
             <label for="basic_salary" class="form-group__header">Basic Salary:</label>
 
             <div class="flex w-1/2">
-              <input type="text" id="basic_salary" class="form-control__inputfield">
+              <input type="text" id="basic_salary" class="form-control__inputfield" required>
               <span class="form-control__span">
                 Ksh
               </span>
@@ -83,10 +86,10 @@
           </div>
 
           <div class="form-group">
-            <label for="basic_salary" class="form-group__header">Benefits (Bonus, Allowance)</label>
+            <label for="benefits" class="form-group__header" required>Benefits (Bonus, Allowance)</label>
 
             <div class="flex w-1/2">
-              <input type="text" id="basic_salary" class="form-control__inputfield">
+              <input type="text" id="benefits" class="form-control__inputfield" required>
               <span class="form-control__span">
                 Ksh
               </span>
@@ -99,12 +102,12 @@
             <div class="flex w-1/2">
 
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="deduct_nssf" id="yes" value="">
-                <label class="form-control__label" for="yes">Yes</label>
+                <input class="form-control__input" type="radio" name="deduct_nssf" value="yes" id="deduct_nssf-yes" required>
+                <label class="form-control__label" for="deduct_nssf-yes">Yes</label>
               </div>
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="deduct_nssf" id="no" value="">
-                <label class="form-control__label" for="no">No</label>
+                <input class="form-control__input" type="radio" name="deduct_nssf" value="no" id="deduct_nssf-no" required>
+                <label class="form-control__label" for="deduct_nssf-no">No</label>
               </div>
             </div>
           </div>
@@ -114,11 +117,11 @@
               Rates:</div>
             <div class="flex flex-col w-1/2 mb-4">
               <div class="flex items-center mb-2">
-                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_new" value="">
+                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_new" value="new" required>
                 <label for="nssf_rates_new" class="form-control__label">New NSSF Rates (Tiered)</label>
               </div>
               <div class="flex items-center">
-                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_old" value="">
+                <input class="form-control__input" type="radio" name="nssf_rates" id="nssf_rates_old" value="old" required>
                 <label for="nssf_rates_old" class="form-control__label">Old NSSF Rates (Ksh200)</label>
               </div>
             </div>
@@ -128,18 +131,17 @@
             <div class="form-group__header">Deduct NHIF:</div>
             <div class="flex w-1/2">
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-yes" value="">
-                <label class="form-control__label" for="yes">Yes</label>
+                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-yes" value="yes" required>
+                <label class="form-control__label" for="deduct_nhif-yes">Yes</label>
               </div>
               <div class="form-control">
-                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-no" value="">
-                <label class="form-control__label" for="no">No</label>
+                <input class="form-control__input" type="radio" name="deduct_nhif" id="deduct_nhif-no" value="no" required>
+                <label class="form-control__label" for="deduct_nhif-no">No</label>
               </div>
             </div>
           </div>
 
-          <button type="button"
-            class="text-white w-full uppercase tracking-wider bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-semibold rounded-0 text-sm px-5 py-2.5 text-center mr-2 mb-2">Calculate</button>
+          <button type="submit" id="calculate-tax" class="btn">Calculate</button>
         </form>
 
         <div class="flex-1">
