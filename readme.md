@@ -13,7 +13,7 @@ Personal Relief: Ksh2,400 Per Month     Personal Relief: Ksh28,800 Per Year
 
 
 NHIF Calculations
-age 18 years andmonthly income of > 1000; based on gross income
+age 18 years and monthly income of > 1000; based on gross income
 ------------------
 Salary Contribution
 Ksh5,999 Ksh150
