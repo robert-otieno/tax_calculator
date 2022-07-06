@@ -31,14 +31,12 @@ class PayPeriod {
 
 class NHIF {
     contribution;
-
-    constructor(basic_salary, deduct_nhif, pay_period) {
+    constructor(basic_salary, deduct_nhif) {
         this.basic_salary = basic_salary;
         this.deduct_nhif = deduct_nhif;
-        this.pay_period = pay_period;
         this.contribution;
     }
-    getNHIF() {
+    nhifContribution() {
         if (this.deduct_nhif === "yes") {
             switch (true) {
                 case this.basic_salary > 1000 && this.basic_salary <= 5999:
@@ -92,19 +90,14 @@ class NHIF {
                 case this.basic_salary >= 100000:
                     this.contribution = 1700;
                     break;
-                default:
+                case "self employed":
                     this.contribution = 500;
                     break;
             }
         } else {
             this.contribution = 0;
         }
-
-        if (this.pay_period === "month") {
-            return this.contribution;
-        } else {
-            return this.contribution * 12;
-        }
+        return this.contribution;
     }
 }
 
@@ -211,8 +204,9 @@ class PAYE extends PayPeriod {
         this.deduct_nssf = deduct_nssf;
         this.deduct_nhif = deduct_nhif;
 
-        this.NSSF = new NSSF(this.basic_salary, this.pay_period, this.nssf_rates, this.deduct_nssf);
-        this.NHIF = new NHIF(this.basic_salary, this.deduct_nhif, this.pay_period);
+        this.NSSF = new NSSF(this.basic_salary, this.nssf_rates, this.deduct_nssf);
+        this.NHIF = new NHIF(this.basic_salary, this.deduct_nhif);
+        this.personal_relief = personalRelief(pay_period);
 
         this.income_tax_band;
     }
@@ -222,18 +216,19 @@ class PAYE extends PayPeriod {
      * @returns taxable_income
      */
     taxableIncome() {
-        return parseFloat(this.basic_salary) + parseFloat(this.benefits) - this.NSSF.getNSSF() - this.NHIF.getNHIF();
+        return (parseFloat(this.basic_salary) + parseFloat(this.benefits) - this.NSSF.getNSSF() - this.NHIF.nhifContribution()) * this.getPayPeriod();
     }
 
-    /**
-     * Calculate paye
-     * tax_on_taxable_income = taxable_income * income_tax_band
-     * paye = tax_on_taxable_income - personalRelief * selected period
-     */
-    getPAYE() {
-        let tax_on_taxable_income = this.taxableIncome() * this.#incomeTaxBand();
-        paye = tax_on_taxable_income - personalRelief
-        return console.log(`PAYE: ${this.taxableIncome() * this.#incomeTaxBand() * this.getPayPeriod()}`);
+    getNHIF() {
+        return this.NHIF.nhifContribution() * this.getPayPeriod();
+    }
+
+    taxOnTaxableIncome() {
+        return this.taxableIncome() * this.#incomeTaxBand();
+    }
+
+    _paye() {
+        return this.taxOnTaxableIncome() - this.personal_relief * this.getPayPeriod();
     }
 
     /**
@@ -255,42 +250,32 @@ class PAYE extends PayPeriod {
     }
 }
 
-/**
- * 
- * @param {*} basic_salary {220,000}
- * @param {*} pay_period {month}
- * @param {*} benefits {0}
- * @param {*} nssf_rates {old}
- * @param {*} deduct_nhif {yes}
- * @param {*} deduct_nssf {yes}
- */
 const processInput = (basic_salary, pay_period, benefits, nssf_rates, deduct_nhif, deduct_nssf) => {
 
     let myPAYE = new PAYE(basic_salary, benefits, pay_period, nssf_rates, deduct_nssf, deduct_nhif);
-    let myNHIF = new NHIF(basic_salary, deduct_nhif, pay_period);
-    let myNSSF = new NSSF(basic_salary, pay_period, nssf_rates, deduct_nssf);
+
     // Income Before Pension Deduction
     document.querySelector('#income_before_nssf_deduction').innerHTML = `Ksh. ${parseFloat(basic_salary).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // NSSF Contribution
-    document.querySelector('#nhif').innerHTML = `Ksh. ${myNHIF.getNHIF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#nssf').innerHTML = `Ksh. ${myNSSF.getNSSF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Income After Pension Deductions
     document.querySelector('#income_after_nssf_deduction').innerHTML = `Ksh. ${(basic_salary - myNSSF.getNSSF()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Benefits in Kind
     document.querySelector('#benefits_in_kind').innerHTML = `Ksh. ${parseFloat(benefits).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Taxable Income
-    document.querySelector('#taxable_income').innerHTML = `Ksh. ${(parseFloat(basic_salary) + parseFloat(benefits) - myNSSF.getNSSF()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#taxable_income').innerHTML = `Ksh. ${myPAYE.taxableIncome().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Tax on Taxable Income
-    document.querySelector('#tax_on_taxable_income').innerHTML = `Ksh. ${myPAYE.getPAYE().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#tax_on_taxable_income').innerHTML = `Ksh. ${myPAYE.taxOnTaxableIncome().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Personal Relief
     document.querySelector('#personal_relief').innerHTML = `Ksh. ${(personalRelief(pay_period)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Tax Net Off Relief
-    document.querySelector('#tax_net_off_relief').innerHTML = `Ksh. ${(myPAYE.getPAYE() - personalRelief(pay_period)).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#tax_net_off_relief').innerHTML = `Ksh. ${myPAYE._paye().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // PAYE
-    document.querySelector('#paye').innerHTML = `Ksh. ${myPAYE.getPAYE().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#paye').innerHTML = `Ksh. ${myPAYE._paye().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Chargable Income
-    document.querySelector('#chargable_income').innerHTML = `Ksh. ${(parseFloat(basic_salary) + parseFloat(benefits) - myNSSF.getNSSF()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#chargable_income').innerHTML = `Ksh. ${myPAYE.taxableIncome().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // NHIF Contribution
-    document.querySelector('#nssf').innerHTML = `Ksh. ${myNSSF.getNSSF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#nhif').innerHTML = `Ksh. ${myNHIF.nhifContribution().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Net Pay
-    document.querySelector('#net_pay').innerHTML = `Ksh. ${(parseFloat(basic_salary) - myNHIF.getNHIF() - myNSSF.getNSSF() - myPAYE.getPAYE()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#net_pay').innerHTML = `Ksh. ${(parseFloat(basic_salary) - myNHIF.nhifContribution() - myNSSF.getNSSF() - myPAYE._paye()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
 }
