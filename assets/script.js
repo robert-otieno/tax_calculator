@@ -103,20 +103,19 @@ class NHIF {
 
 class NSSF {
     #oldNSSFRatesEmployeeContribution = 200;
-    #oldNSSFRatesEmployerContribution = 200;
+    // #oldNSSFRatesEmployerContribution = 200;
     Deductible_NSSF_Pension_Contribution;
 
-    constructor(basic_salary, pay_period, nssf_rates, deduct_nssf) {
+    constructor(basic_salary, nssf_rates, deduct_nssf) {
         this.basic_salary = basic_salary;
-        this.pay_period = pay_period;
         this.nssf_rates = nssf_rates;
         this.deduct_nssf = deduct_nssf;
 
         this.#oldNSSFRatesEmployeeContribution;
-        this.#oldNSSFRatesEmployerContribution;
+        // this.#oldNSSFRatesEmployerContribution;
         this.Deductible_NSSF_Pension_Contribution;
     }
-    getNSSF() {
+    nssfContribution() {
         // To deduct NSSF or Not to Deduct
         switch (this.deduct_nssf) {
             // If "Yes"
@@ -124,27 +123,11 @@ class NSSF {
                 switch (this.nssf_rates) {
                     // New NSSF_RATES
                     case "new":
-                        switch (this.pay_period) {
-                            case "month":
-                                this.Deductible_NSSF_Pension_Contribution = this.#calculateNewEmployeeContribution();
-                                break;
-
-                            case "year":
-                                this.Deductible_NSSF_Pension_Contribution = (this.#calculateNewEmployeeContribution()) * 12;
-                                break;
-                        }
+                        this.Deductible_NSSF_Pension_Contribution = this.#calculateNewEmployeeContribution();
                         break;
                     // Old NSSF_RATES
                     default:
-                        switch (this.pay_period) {
-                            case "month":
-                                this.Deductible_NSSF_Pension_Contribution = this.#oldNSSFRatesEmployeeContribution;
-                                break;
-
-                            case "year":
-                                this.Deductible_NSSF_Pension_Contribution = (this.#oldNSSFRatesEmployeeContribution) * 12;
-                                break;
-                        }
+                        this.Deductible_NSSF_Pension_Contribution = this.#oldNSSFRatesEmployeeContribution;
                         break;
                 }
                 break;
@@ -171,13 +154,13 @@ class NSSF {
      * Employer contribution limit is 2160
      * @returns employerContribution
      */
-    #calculateNewEmployerContribution() {
-        if (this.basic_salary > 6000 && this.basic_salary <= 18000 || 0.06 * this.basic_salary < 2160) {
-            return 0.06 * this.basic_salary
-        } else {
-            return 2160;
-        }
-    }
+    // #calculateNewEmployerContribution() {
+    //     if (this.basic_salary > 6000 && this.basic_salary <= 18000 || 0.06 * this.basic_salary < 2160) {
+    //         return 0.06 * this.basic_salary
+    //     } else {
+    //         return 2160;
+    //     }
+    // }
 }
 
 const personalRelief = (pay_period) => {
@@ -216,11 +199,15 @@ class PAYE extends PayPeriod {
      * @returns taxable_income
      */
     taxableIncome() {
-        return (parseFloat(this.basic_salary) + parseFloat(this.benefits) - this.NSSF.getNSSF() - this.NHIF.nhifContribution()) * this.getPayPeriod();
+        return (parseFloat(this.basic_salary) + parseFloat(this.benefits) - this.NSSF.nssfContribution() - this.NHIF.nhifContribution()) * this.getPayPeriod();
     }
 
     getNHIF() {
         return this.NHIF.nhifContribution() * this.getPayPeriod();
+    }
+
+    getNSSF() {
+        return this.NSSF.nssfContribution() * this.getPayPeriod();
     }
 
     taxOnTaxableIncome() {
@@ -257,9 +244,9 @@ const processInput = (basic_salary, pay_period, benefits, nssf_rates, deduct_nhi
     // Income Before Pension Deduction
     document.querySelector('#income_before_nssf_deduction').innerHTML = `Ksh. ${parseFloat(basic_salary).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // NSSF Contribution
-    document.querySelector('#nssf').innerHTML = `Ksh. ${myNSSF.getNSSF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#nssf').innerHTML = `Ksh. ${myPAYE.getNSSF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Income After Pension Deductions
-    document.querySelector('#income_after_nssf_deduction').innerHTML = `Ksh. ${(basic_salary - myNSSF.getNSSF()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#income_after_nssf_deduction').innerHTML = `Ksh. ${(basic_salary - myPAYE.getNSSF()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Benefits in Kind
     document.querySelector('#benefits_in_kind').innerHTML = `Ksh. ${parseFloat(benefits).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Taxable Income
@@ -275,7 +262,7 @@ const processInput = (basic_salary, pay_period, benefits, nssf_rates, deduct_nhi
     // Chargable Income
     document.querySelector('#chargable_income').innerHTML = `Ksh. ${myPAYE.taxableIncome().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // NHIF Contribution
-    document.querySelector('#nhif').innerHTML = `Ksh. ${myNHIF.nhifContribution().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#nhif').innerHTML = `Ksh. ${myPAYE.getNHIF().toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
     // Net Pay
-    document.querySelector('#net_pay').innerHTML = `Ksh. ${(parseFloat(basic_salary) - myNHIF.nhifContribution() - myNSSF.getNSSF() - myPAYE._paye()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+    document.querySelector('#net_pay').innerHTML = `Ksh. ${(parseFloat(basic_salary) - myPAYE.getNHIF() - myPAYE.getNSSF() - myPAYE._paye()).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
 }

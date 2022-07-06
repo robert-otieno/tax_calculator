@@ -1,3 +1,6 @@
+# Kenyan Paye Tax Calculator
+
+![Tax Calculator](./assets/img/tax-calculator.png)
 calculate paye tax and deductions (params [basic salary, benefits - bonus, allowance])
 
 PAYE
