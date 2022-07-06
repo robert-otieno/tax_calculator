@@ -10,41 +10,41 @@
   <link rel="stylesheet" href="./assets/style.css">
   <style type="text/tailwindcss">
     @layer components {
-            .main {
-                @apply relative flex min-h-screen flex-col overflow-hidden md:py-6;
-            }
-            .main-content {
-                @apply shadow-xl ring-1 ring-gray-900/5 sm:rounded-lg md:rounded-xl bg-gradient-to-r bg-white dark:bg-gray-900 border border-orange-200 dark:border-orange-700 dark:bg-gray-800
-            }
-            .form-group {
-                @apply flex justify-center items-center justify-between
-            }
-            .form-group__header {
-                @apply block mb-2 text-sm font-medium font-semibold text-gray-900 dark:text-gray-300
-            }
-            .form-control {
-                @apply flex items-center mr-4
-            }
-            .form-control__input {
-                @apply w-4 h-4 text-orange-600 bg-gray-100 rounded border border-orange-600 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 appearance-none checked:bg-gradient-to-br from-pink-500 to-orange-400 outline-none dark:bg-gray-700 dark:border-orange-600 cursor-pointer
-            }
-            .form-control__label {
-                @apply uppercase ml-2 text-sm font-medium text-gray-900 dark:text-gray-300
-            }
-            .form-control__inputfield {
-              @apply rounded-none bg-orange-50 border border-orange-300 text-gray-900 focus:ring-orange-500 focus:outline-none focus:border-orange-500 block flex-1 min-w-0 w-full text-sm border-orange-300 p-2.5 dark:bg-orange-700 dark:border-orange-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500
-            }
-            .form-control__span {
-              @apply inline-flex items-center px-3 text-sm text-gray-900 bg-orange-200 border border-l-0 border-orange-300 rounded-none dark:bg-orange-600 dark:text-gray-400 dark:border-orange-600
-            }
-            .table-row {
-              @apply border-b border-gray-600 dark:bg-gray-800 dark:border-gray-700
-            }
-            .btn {
-              @apply text-white w-full uppercase tracking-wider bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-semibold rounded-none text-sm px-5 py-2.5 text-center mr-2 mb-2
-            }
-        }
-      </style>
+      .main {
+          @apply relative flex min-h-screen flex-col overflow-hidden md:py-6;
+      }
+      .main-content {
+          @apply items-center shadow-xl ring-1 ring-gray-900/5 sm:rounded-lg md:rounded-xl bg-gradient-to-r bg-white dark:bg-gray-900 border border-orange-200 dark:border-orange-700 dark:bg-gray-800
+      }
+      .form-group {
+          @apply flex justify-center items-center justify-between
+      }
+      .form-group__header {
+          @apply block mb-2 text-sm font-medium font-semibold text-gray-900 dark:text-gray-300
+      }
+      .form-control {
+          @apply flex items-center mr-4
+      }
+      .form-control__input {
+          @apply w-4 h-4 text-orange-600 bg-gray-100 rounded border border-orange-600 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 appearance-none checked:bg-gradient-to-br from-pink-500 to-orange-400 outline-none dark:bg-gray-700 dark:border-orange-600 cursor-pointer
+      }
+      .form-control__label {
+          @apply uppercase ml-2 text-sm font-medium text-gray-900 dark:text-gray-300
+      }
+      .form-control__inputfield {
+        @apply rounded-none bg-orange-50 border border-orange-300 text-gray-900 focus:ring-orange-500 focus:outline-none focus:border-orange-500 block flex-1 min-w-0 w-full text-sm border-orange-300 p-2.5 dark:bg-orange-700 dark:border-orange-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500
+      }
+      .form-control__span {
+        @apply inline-flex items-center px-3 text-sm text-gray-900 bg-orange-200 border border-l-0 border-orange-300 rounded-none dark:bg-orange-600 dark:text-gray-400 dark:border-orange-600
+      }
+      .table-row {
+        @apply border-b border-gray-600 dark:bg-gray-800 dark:border-gray-700
+      }
+      .btn {
+        @apply text-white w-full uppercase tracking-wider bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-semibold rounded-none text-sm px-5 py-2.5 text-center mr-2 mb-2
+      }
+    }
+  </style>
 </head>
 
 <body class="dark:bg-gray-900">
@@ -146,55 +146,55 @@
 
         <div class="flex-1">
           <div class="bg-orange-100 text-sm rounded-r-xl px-8 py-6">
-            <table class="w-full whitespace-nowrap tracking-wide text-gray-800">
+            <table class="w-full whitespace-nowrap tracking-light text-gray-800">
               <tbody>
                 <tr class="table-row">
                   <th class="text-left py-2">Income Before Pension Deduction</th>
-                  <th class="text-right py-2">Ksh. 0.00</th>
+                  <th id="income_before_nssf_deduction" class="text-right py-2">Ksh. 0.00</th>
                 </tr>
                 <tr class="table-row">
-                  <td class="text-left py-2">Deductible NSSF Pension Contribution</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td class="text-left py-2">NSSF Contribution</td>
+                  <td id="nssf" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Income After Pension Deductions</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="income_after_nssf_deduction" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Benefits in Kind</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="benefits_in_kind" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Taxable Income</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="taxable_income" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Tax on Taxable Income</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="tax_on_taxable_income" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Personal Relief</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="personal_relief" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Tax Net Off Relief</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="tax_net_off_relief" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">PAYE</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="paye" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">Chargable Income</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="chargable_income" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="table-row">
                   <td class="text-left py-2">NHIF Contribution</td>
-                  <td class="text-right py-2 text-green-700">Ksh. 0.00</td>
+                  <td id="nhif" class="text-right py-2 text-green-700">Ksh. 0.00</td>
                 </tr>
                 <tr class="border-t">
                   <th class="text-left py-2">Net Pay</th>
-                  <th class="text-right py-2">Ksh. 0.00</th>
+                  <th id="net_pay" class="text-right py-2">Ksh. 0.00</th>
                 </tr>
               </tbody>
             </table>
