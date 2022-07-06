@@ -1,6 +1,4 @@
-let calculateBtn = document.querySelector("#calculate-tax");
-
-calculateBtn.addEventListener("click", (e) => {
+document.querySelector("#calculate-tax").addEventListener("click", (e) => {
     e.preventDefault();
     let deduct_nssf = document.querySelector('input[name="deduct_nssf"]:checked').value;
     let deduct_nhif = document.querySelector('input[name="deduct_nhif"]:checked').value;
@@ -12,27 +10,22 @@ calculateBtn.addEventListener("click", (e) => {
     processInput(basic_salary, pay_period, benefits, nssf_rates, deduct_nhif, deduct_nssf);
 })
 
-class PAYE {
-    income_tax_band;
-
-    constructor(basic_salary, pay_period) {
-        this.basic_salary = basic_salary;
+class PayPeriod {
+    constructor(pay_period) {
         this.pay_period = pay_period;
-        this.income_tax_band;
     }
-    getPAYE() {
-        if (this.pay_period === 'month' && this.basic_salary <= 12298 || this.pay_period === 'year' && this.basic_salary <= 147580) {
-            this.income_tax_band = 0.1;
-        } else if (this.pay_period === 'month' && this.basic_salary <= 23885 || this.pay_period === 'year' && this.basic_salary <= 286623) {
-            this.income_tax_band = 0.15;
-        } else if (this.pay_period === 'month' && this.basic_salary <= 35472 || this.pay_period === 'year' && this.basic_salary <= 425666) {
-            this.income_tax_band = 0.2;
-        } else if (this.pay_period === 'month' && this.basic_salary <= 47059 || this.pay_period === 'year' && this.basic_salary <= 564709) {
-            this.income_tax_band = 0.25;
-        } else if (this.pay_period === 'month' && this.basic_salary > 47059 || this.pay_period === 'year' && this.basic_salary > 564709) {
-            this.income_tax_band = 0.3;
+    getPayPeriod() {
+        let $pay_period;
+        switch (this.pay_period) {
+            case "month":
+                $pay_period = 1;
+                break;
+
+            case "year":
+                $pay_period = 12;
+                break;
         }
-        return this.basic_salary * this.income_tax_band;
+        return $pay_period;
     }
 }
 
@@ -119,6 +112,7 @@ class NSSF {
     #oldNSSFRatesEmployeeContribution = 200;
     #oldNSSFRatesEmployerContribution = 200;
     Deductible_NSSF_Pension_Contribution;
+
     constructor(basic_salary, pay_period, nssf_rates, deduct_nssf) {
         this.basic_salary = basic_salary;
         this.pay_period = pay_period;
@@ -207,6 +201,60 @@ const personalRelief = (pay_period) => {
     return relief;
 }
 
+class PAYE extends PayPeriod {
+    income_tax_band;
+    constructor(basic_salary, benefits, pay_period, nssf_rates, deduct_nssf, deduct_nhif) {
+        super(pay_period);
+        this.basic_salary = basic_salary;
+        this.benefits = benefits;
+        this.nssf_rates = nssf_rates;
+        this.deduct_nssf = deduct_nssf;
+        this.deduct_nhif = deduct_nhif;
+
+        this.NSSF = new NSSF(this.basic_salary, this.pay_period, this.nssf_rates, this.deduct_nssf);
+        this.NHIF = new NHIF(this.basic_salary, this.deduct_nhif, this.pay_period);
+
+        this.income_tax_band;
+    }
+
+    /**
+     * taxable_income = basic_salary + benefits - contributions
+     * @returns taxable_income
+     */
+    taxableIncome() {
+        return parseFloat(this.basic_salary) + parseFloat(this.benefits) - this.NSSF.getNSSF() - this.NHIF.getNHIF();
+    }
+
+    /**
+     * Calculate paye
+     * tax_on_taxable_income = taxable_income * income_tax_band
+     * paye = tax_on_taxable_income - personalRelief * selected period
+     */
+    getPAYE() {
+        let tax_on_taxable_income = this.taxableIncome() * this.#incomeTaxBand();
+        paye = tax_on_taxable_income - personalRelief
+        return console.log(`PAYE: ${this.taxableIncome() * this.#incomeTaxBand() * this.getPayPeriod()}`);
+    }
+
+    /**
+     * Calculate income_tax_band by checking for the payPeriod() and the taxableIncome()
+     * @returns income_tax_band
+     */
+    #incomeTaxBand() {
+        if (this.getPayPeriod() === 1 && this.taxableIncome() <= 12298 || this.getPayPeriod() === 12 && this.taxableIncome() <= 147580) {
+            return 0.1;
+        } else if (this.getPayPeriod() === 1 && this.taxableIncome() <= 23885 || this.getPayPeriod() === 12 && this.taxableIncome() <= 286623) {
+            return 0.15;
+        } else if (this.getPayPeriod() === 1 && this.taxableIncome() <= 35472 || this.getPayPeriod() === 12 && this.taxableIncome() <= 425666) {
+            return 0.2;
+        } else if (this.getPayPeriod() === 1 && this.taxableIncome() <= 47059 || this.getPayPeriod() === 12 && this.taxableIncome() <= 564709) {
+            return 0.25;
+        } else if (this.getPayPeriod() === 1 && this.taxableIncome() > 47059 || this.getPayPeriod() === 12 && this.taxableIncome() > 564709) {
+            return 0.3;
+        }
+    }
+}
+
 /**
  * 
  * @param {*} basic_salary {220,000}
@@ -218,7 +266,7 @@ const personalRelief = (pay_period) => {
  */
 const processInput = (basic_salary, pay_period, benefits, nssf_rates, deduct_nhif, deduct_nssf) => {
 
-    let myPAYE = new PAYE(basic_salary, benefits, pay_period);
+    let myPAYE = new PAYE(basic_salary, benefits, pay_period, nssf_rates, deduct_nssf, deduct_nhif);
     let myNHIF = new NHIF(basic_salary, deduct_nhif, pay_period);
     let myNSSF = new NSSF(basic_salary, pay_period, nssf_rates, deduct_nssf);
     // Income Before Pension Deduction
